@@ -7,15 +7,15 @@ TFIDFNP<br />
 LDA<br />
 greedy wiki<br />
 greedy acm<br />
-etc.
+Global Ngrams<br />
+<br />
 
 ## Also it has possiblity to learn representation for these concepts using
 
 Concept2Vec<br />
 Doc2Vec<br />
 Word2Vec<br />
-DocTag2Vec<br />
-Joint Learning<br />
+
 
 ---
 
