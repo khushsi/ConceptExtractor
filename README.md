@@ -20,7 +20,4 @@ Joint Learning
 
 For using concept_extractor
 -  You have to have a text file  with text in : IR_CORPUS = 'add the path to your file here'
-Uncomment the below line
-- # print("HIGH NP TFIDF WORDS")
-    # for i in range(1,4):
-    #     extract_np_high_tfidf_words( documents, top_k=5, ngram=(i,i), OUTPUT_FOL='TFIDFNP'+str(i))
+- And uncomment the concept method you want to run
