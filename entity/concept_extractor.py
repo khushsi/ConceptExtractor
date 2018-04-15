@@ -14,7 +14,7 @@ import sys
 from nltk.stem.porter import PorterStemmer
 import heapq
 import itertools
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
 from nltk.tokenize import sent_tokenize
 import gensim
 from gensim import corpora
@@ -685,7 +685,6 @@ def extract_lda(documents,testset,OUTPUT_FOL="wLDA",topics_n = 200):
 
         pickle.dump(topics,f)
         f.close()
-
 def extract_high_tfidf_words( documents, top_k=200, ngram=(1,1), OUTPUT_FOL='TFIDF'):
     '''
     Return the top K 1-gram terms according to TF-IDF
@@ -737,6 +736,105 @@ def extract_high_tfidf_words( documents, top_k=200, ngram=(1,1), OUTPUT_FOL='TFI
         f.write('\n')
         f.close()
 
+def extract_high_tfidf_words_sm( documents, ngram=(1,1), OUTPUT_FOL='TFIDFQtext'):
+    '''
+    Return the top K 1-gram terms according to TF-IDF
+    Load corpus and convert to Dictionary and Corpus of gensim
+    :param corpus_path
+    :param num_feature, indicate how many terms you wanna retain, not useful now
+    :return:
+    '''
+
+    if not os.path.exists(OUTPUT_DIR + OUTPUT_FOL):
+        os.makedirs(OUTPUT_DIR + OUTPUT_FOL)
+
+    texts = [' '.join(preprocessText(document.text,stemming=IS_STEM,stopwords_removal=REMOVE_STOPWORDS))  for document in documents]
+
+    #### Create Scikitlearn corpus
+    top_k_list = {}
+
+    tf = TfidfVectorizer(analyzer='word', ngram_range=ngram,stop_words=stopwords,min_df=2,max_df=1000)
+    tfidf_matrix = tf.fit_transform(texts)
+    feature_names = tf.get_feature_names()
+
+    doc_id=0
+
+    for doc in tfidf_matrix.todense():
+        temptokens = zip(doc.tolist()[0], itertools.count())
+        temptokens1=[]
+        for (x, y) in temptokens:
+            stemy = feature_names[y]
+            if x > 0.0:
+                temptokens1.append((x,y))
+
+        tokindex = heapq.nlargest(len(temptokens1), temptokens1)
+
+        top_k_list[documents[doc_id].id] = []
+        for (x, y) in tokindex:
+            top_k_list[documents[doc_id].id].append((feature_names[y],x) )
+        doc_id += 1
+
+    write_to_file=True
+    if write_to_file == True:
+        f = open(OUTPUT_DIR+OUTPUT_FOL+".csv", "w")
+        f.write("questionid,term,tf,doc_nbterms,nb_docs,df,idf,tfidf\n")
+
+        nb_docs =len(documents)
+        doc_id=0
+        ctf_model = CountVectorizer(analyzer='word', ngram_range=ngram, stop_words=stopwords, min_df=1)
+        ctfidf_matrix = ctf_model.fit_transform(texts)
+        ctfidf_matrixdense = ctfidf_matrix.todense()
+        cfeature_names = ctf_model.get_feature_names()
+
+        for doc in tfidf_matrix.todense():
+            print(doc_id)
+            temptokens = zip(doc.tolist()[0], itertools.count())
+            cmat = ctfidf_matrixdense[doc_id].tolist()[0]
+            doc_nbterms = sum(cmat)
+            temptokens1=[]
+            for (x, y) in temptokens:
+                if x > 0:
+                    cindex = cfeature_names.index(feature_names[y])
+                    f_td = cmat[cindex]
+                    df = len(ctfidf_matrix[:, cindex].data)
+                    idf = round(np.log(nb_docs / df), 8)
+                    z=x
+                    temptokens1.append((z, x, y,f_td,doc_nbterms,nb_docs,df,idf))
+
+            tokindex = heapq.nlargest(len(temptokens1), temptokens1)
+            # print(tokindex)
+
+            top_k_list[documents[doc_id].id] = []
+            for (x, y,z,f_td,doc_nbterms,nb_docs,df,idf) in tokindex:
+                top_k_list[documents[doc_id].id].append((feature_names[z],x,y,f_td,doc_nbterms,nb_docs,df,idf) )
+
+            if len(top_k_list[documents[doc_id].id]) == 0:
+                for (x, y, z, f_td, doc_nbterms, nb_docs, df, idf) in tokindex:
+                    top_k_list[documents[doc_id].id].append((feature_names[z], x, y, f_td, doc_nbterms, nb_docs, df, idf))
+
+            if len(top_k_list[documents[doc_id].id]) < 2 and len(tokindex) > 0:
+                print("here",documents[doc_id].id)
+                for i in range(len(tokindex)):
+                    ( x, y,z, f_td, doc_nbterms, nb_docs, df, idf) = tokindex[i]
+                    print(doc_id)
+                    print(documents[doc_id].id)
+                    print(tokindex)
+                    print( ( feature_names[z], y,x, f_td, doc_nbterms, nb_docs, df, idf))
+                    top_k_list[documents[doc_id].id].append((feature_names[z],x,y,f_td,doc_nbterms,nb_docs,df,idf) )
+            doc_id += 1
+
+
+
+        for doc in documents:
+            for (x,y,z,f_td,doc_nbterms,nb_docs,df,idf) in top_k_list[doc.id]:
+                f.write(str(doc.id) + ","  + x + "," + str(f_td) + "," + str(doc_nbterms) + "," + str(nb_docs) + "," + str(df) + "," + str(idf) + "," + str(round(z,5)) + "\n")
+
+
+
+        f.write('\n')
+        print("writing over")
+        f.close()
+
 if __name__=='__main__':
 
     keyword_trie = None
@@ -748,11 +846,18 @@ if __name__=='__main__':
     llistbooks = ['iir-', 'mir-', 'foa-']
     documents = load_documenttsv(IR_CORPUS,llistbooks)
 
+    QS_CORPUS = 'data/readingcircleCorpus.csv'
+    listbooks = ['IR']
+    documents = load_document(QS_CORPUS,listbooks)
+
 
     # # Code For NP Chunks
     print("NP Chunks ")
-    extract_np_high_tfidf_words( documents, top_k=10, ngram=(1,3), OUTPUT_FOL='TFIDFNP10')
-    extract_np_high_tfidf_words(documents, top_k=30, ngram=(1, 3), OUTPUT_FOL='TFIDFNP30')
+    # extract_np_high_tfidf_words( documents, top_k=5, ngram=(1,1), OUTPUT_FOL='TFIDFNP115')
+    # extract_np_high_tfidf_words(documents, top_k=5, ngram=(2, 2), OUTPUT_FOL='TFIDFNP225')
+    # extract_np_high_tfidf_words(documents, top_k=5, ngram=(3, 3), OUTPUT_FOL='TFIDFNP335')
+
+    # extract_np_high_tfidf_words(documents, top_k=30, ngram=(1, 3), OUTPUT_FOL='TFIDFNP30')
 
     # documentstest = load_document(IR_CORPUS,listbooks_test)
 
@@ -797,6 +902,7 @@ if __name__=='__main__':
     #
     # # # Code For extracting VSM
     # # print("VSM")
+    # # print("VSM")
     # # extract_vectors(documents,  ngram=(1, 1), OUTPUT_FOL='UNIGRAM')
     # #
     # # Code For Extract Unigrams
@@ -815,7 +921,7 @@ if __name__=='__main__':
     # print("HIGH TFIDF WORDS")
     # for i in range(1,4):
     #     extract_high_tfidf_words( documents, top_k=5, ngram=(i,i), OUTPUT_FOL='TFIDF'+str(i))
-    # extract_high_tfidf_words(documents, top_k=5, ngram=(1, 3), OUTPUT_FOL='TFIDF13')
+    # extract_high_tfidf_words(documents, top_k=10, ngram=(1, 1), OUTPUT_FOL='TFIDF13',write_to_file=True)
     # print("Global NGRAMS")
     # getGlobalngrams(grams=(2,2),documents=documents,threshold=0.01)
     # getGlobalngrams(grams=(3,3), documents=documents, threshold=0.01)
@@ -826,3 +932,4 @@ if __name__=='__main__':
     #
     # extract_unigrams(documents,  ngram=3, OUTPUT_FOL='13NGRAMS')
 
+    extract_high_tfidf_words_sm(documents,  ngram=(1, 1), OUTPUT_FOL='TFIDF1sm')
