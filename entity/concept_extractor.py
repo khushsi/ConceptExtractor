@@ -9,7 +9,7 @@ import csv
 import marisa_trie
 import nltk
 from gensim.models import Doc2Vec
-# from gensim.models.doc2vec import TaggedDocument
+from gensim.models.doc2vec import TaggedDocument
 import sys
 from nltk.stem.porter import PorterStemmer
 import heapq
@@ -21,6 +21,7 @@ from gensim import corpora
 from gensim.matutils import sparse2full
 from collections import defaultdict
 import numpy as np
+import pandas as pd
 
 IR_CORPUS = 'data/iirmirbook.tsv'
 KC_CORPUS = 'data/conceptdocs.csv'
@@ -406,7 +407,9 @@ class Document:
         self.id = args[0]
         self.text = args[1]
         self.type= args[0].split("-")[0]
-
+        self.otherfields = {}
+        if len(args) > 2:
+            self.otherfields=args[2]
 
         sen_list = sent_tokenize(self.text)
 
@@ -432,6 +435,23 @@ def load_document(path,booknames=['iir-']):
                 doc = Document(row[0].strip(),row[1].strip())
                 doc_list.append(doc)
     return doc_list
+
+def load_document_allfields(path,booknames=[],textfield=['text'],idfield="id",otherfields=[]):
+    print('Start loading documents from %s' % path)
+    doc_list = []
+    file = open(path, 'r',encoding='utf-8', errors='ignore')
+    df = pd.read_csv(path,header=0)
+
+    for index,row in df.iterrows():
+        if(len(booknames) == 0  or ( row[idfield].startswith(tuple(booknames)))):
+            # print(row[idfield])
+            text = [ str(row[field]) for field in textfield]
+            text = text  + [" "]
+            otherfields_dict = { column:row[column] for column in df.columns if (column not in textfield and column != idfield and column in otherfields)}
+            doc = Document(str(row[idfield]),' '.join(text),otherfields_dict)
+            doc_list.append(doc)
+    return doc_list
+
 
 def load_documenttsv(path,booknames=['iir-']):
     print('Start loading documents from %s' % path)
@@ -736,7 +756,202 @@ def extract_high_tfidf_words( documents, top_k=200, ngram=(1,1), OUTPUT_FOL='TFI
         f.write('\n')
         f.close()
 
-def extract_high_tfidf_words_sm( documents, ngram=(1,1), OUTPUT_FOL='TFIDFQtext'):
+def extract_top_kcs_sm_from_vector( KC_FOLDER,  OUTPUT_FILE='TFIDFQtext'):
+    '''
+    Return the top K 1-gram terms according to TF-IDF
+    Load corpus and convert to Dictionary and Corpus of gensim
+    :param corpus_path
+    :param num_feature, indicate how many terms you wanna retain, not useful now
+    :return:
+    '''
+    lenVector = 0
+    topicnames = []
+    columns = ["id","term","weight"]
+    file_csv = open(OUTPUT_DIR + OUTPUT_FILE , 'w')
+    csvwriter = csv.writer(file_csv, delimiter=',')
+    csvwriter.writerow(columns)
+
+
+    for filename in os.listdir(OUTPUT_DIR+KC_FOLDER):
+        kcVector = pickle.load(open(OUTPUT_DIR+KC_FOLDER +"/"+ filename,'rb'))
+        print(len(kcVector))
+        if( lenVector == 0):
+            lenVector = len(kcVector)
+            topicnames = [ "kc"+str(i) for i in range(lenVector)]
+
+        temptokens = zip(kcVector,topicnames)
+        temptokens1 = []
+        for (x, y) in temptokens:
+            if x > 0.0:
+                temptokens1.append((x,y))
+
+        tokindex = heapq.nlargest(len(temptokens1), temptokens1)
+
+        for (x,y) in tokindex:
+            csvwriter.writerow([filename.replace(".txt.phrases",""),y,x])
+    #
+    # write_to_file=True
+    # if write_to_file == True:
+    #     f = open(OUTPUT_DIR+OUTPUT_FOL+".csv", "w")
+    #     f.write("questionid,term,tf,doc_nbterms,nb_docs,df,idf,tfidf\n")
+    #
+    #     nb_docs =len(documents)
+    #     doc_id=0
+    #     ctf_model = CountVectorizer(analyzer='word', ngram_range=ngram, stop_words=stopwords, min_df=1)
+    #     ctfidf_matrix = ctf_model.fit_transform(texts)
+    #     ctfidf_matrixdense = ctfidf_matrix.todense()
+    #     cfeature_names = ctf_model.get_feature_names()
+    #
+    #     for doc in tfidf_matrix.todense():
+    #         print(doc_id)
+    #         temptokens = zip(doc.tolist()[0], itertools.count())
+    #         cmat = ctfidf_matrixdense[doc_id].tolist()[0]
+    #         doc_nbterms = sum(cmat)
+    #         temptokens1=[]
+    #         for (x, y) in temptokens:
+    #             if x > 0:
+    #                 cindex = cfeature_names.index(feature_names[y])
+    #                 f_td = cmat[cindex]
+    #                 df = len(ctfidf_matrix[:, cindex].data)
+    #                 idf = round(np.log(nb_docs / df), 8)
+    #                 z=x
+    #                 temptokens1.append((z, x, y,f_td,doc_nbterms,nb_docs,df,idf))
+    #
+    #         tokindex = heapq.nlargest(len(temptokens1), temptokens1)
+    #         # print(tokindex)
+    #
+    #         top_k_list[documents[doc_id].id] = []
+    #         for (x, y,z,f_td,doc_nbterms,nb_docs,df,idf) in tokindex:
+    #             top_k_list[documents[doc_id].id].append((feature_names[z],x,y,f_td,doc_nbterms,nb_docs,df,idf) )
+    #
+    #         if len(top_k_list[documents[doc_id].id]) == 0:
+    #             for (x, y, z, f_td, doc_nbterms, nb_docs, df, idf) in tokindex:
+    #                 top_k_list[documents[doc_id].id].append((feature_names[z], x, y, f_td, doc_nbterms, nb_docs, df, idf))
+    #
+    #         if len(top_k_list[documents[doc_id].id]) < 2 and len(tokindex) > 0:
+    #             print("here",documents[doc_id].id)
+    #             for i in range(len(tokindex)):
+    #                 ( x, y,z, f_td, doc_nbterms, nb_docs, df, idf) = tokindex[i]
+    #                 print(doc_id)
+    #                 print(documents[doc_id].id)
+    #                 print(tokindex)
+    #                 print( ( feature_names[z], y,x, f_td, doc_nbterms, nb_docs, df, idf))
+    #                 top_k_list[documents[doc_id].id].append((feature_names[z],x,y,f_td,doc_nbterms,nb_docs,df,idf) )
+    #         doc_id += 1
+    #
+    #
+    #
+    #     for doc in documents:
+    #         for (x,y,z,f_td,doc_nbterms,nb_docs,df,idf) in top_k_list[doc.id]:
+    #             f.write(str(doc.id) + ","  + x + "," + str(f_td) + "," + str(doc_nbterms) + "," + str(nb_docs) + "," + str(df) + "," + str(idf) + "," + str(round(z,5)) + "\n")
+
+
+
+        # f.write('\n')
+        # print("writing over")
+        # f.close()
+
+# def extract_high_tfidf_words_sm( documents, ngram=(1,1), OUTPUT_FOL='TFIDFQtext'):
+#     '''
+#     Return the top K 1-gram terms according to TF-IDF
+#     Load corpus and convert to Dictionary and Corpus of gensim
+#     :param corpus_path
+#     :param num_feature, indicate how many terms you wanna retain, not useful now
+#     :return:
+#     '''
+#
+#     if not os.path.exists(OUTPUT_DIR + OUTPUT_FOL):
+#         os.makedirs(OUTPUT_DIR + OUTPUT_FOL)
+#
+#     texts = [' '.join(preprocessText(document.text,stemming=IS_STEM,stopwords_removal=REMOVE_STOPWORDS))  for document in documents]
+#     print(texts)
+#     texts = ['keywords' if len(text) < 2 else text for text in texts ]
+#     print(texts)
+#     #### Create Scikitlearn corpus
+#     top_k_list = {}
+#
+#     tf = TfidfVectorizer(analyzer='word', ngram_range=ngram,stop_words=stopwords,min_df=2,max_df=1000)
+#     tfidf_matrix = tf.fit_transform(texts)
+#     feature_names = tf.get_feature_names()
+#
+#     doc_id=0
+#
+#     for doc in tfidf_matrix.todense():
+#         temptokens = zip(doc.tolist()[0], itertools.count())
+#         temptokens1=[]
+#         for (x, y) in temptokens:
+#             stemy = feature_names[y]
+#             if x > 0.0:
+#                 temptokens1.append((x,y))
+#
+#         tokindex = heapq.nlargest(len(temptokens1), temptokens1)
+#
+#         top_k_list[documents[doc_id].id] = []
+#         for (x, y) in tokindex:
+#             top_k_list[documents[doc_id].id].append((feature_names[y],x) )
+#         doc_id += 1
+#
+#     write_to_file=True
+#     if write_to_file == True:
+#         f = open(OUTPUT_DIR+OUTPUT_FOL+".csv", "w")
+#         f.write("questionid,term,tf,doc_nbterms,nb_docs,df,idf,tfidf\n")
+#
+#         nb_docs =len(documents)
+#         doc_id=0
+#         ctf_model = CountVectorizer(analyzer='word', ngram_range=ngram, stop_words=stopwords, min_df=1)
+#         ctfidf_matrix = ctf_model.fit_transform(texts)
+#         ctfidf_matrixdense = ctfidf_matrix.todense()
+#         cfeature_names = ctf_model.get_feature_names()
+#
+#         for doc in tfidf_matrix.todense():
+#             print(doc_id)
+#             temptokens = zip(doc.tolist()[0], itertools.count())
+#             cmat = ctfidf_matrixdense[doc_id].tolist()[0]
+#             doc_nbterms = sum(cmat)
+#             temptokens1=[]
+#             for (x, y) in temptokens:
+#                 if x > 0:
+#                     cindex = cfeature_names.index(feature_names[y])
+#                     f_td = cmat[cindex]
+#                     df = len(ctfidf_matrix[:, cindex].data)
+#                     idf = round(np.log(nb_docs / df), 8)
+#                     z=x
+#                     temptokens1.append((z, x, y,f_td,doc_nbterms,nb_docs,df,idf))
+#
+#             tokindex = heapq.nlargest(len(temptokens1), temptokens1)
+#             # print(tokindex)
+#
+#             top_k_list[documents[doc_id].id] = []
+#             for (x, y,z,f_td,doc_nbterms,nb_docs,df,idf) in tokindex:
+#                 top_k_list[documents[doc_id].id].append((feature_names[z],x,y,f_td,doc_nbterms,nb_docs,df,idf) )
+#
+#             if len(top_k_list[documents[doc_id].id]) == 0:
+#                 for (x, y, z, f_td, doc_nbterms, nb_docs, df, idf) in tokindex:
+#                     top_k_list[documents[doc_id].id].append((feature_names[z], x, y, f_td, doc_nbterms, nb_docs, df, idf))
+#
+#             if len(top_k_list[documents[doc_id].id]) < 2 and len(tokindex) > 0:
+#                 print("here",documents[doc_id].id)
+#                 for i in range(len(tokindex)):
+#                     ( x, y,z, f_td, doc_nbterms, nb_docs, df, idf) = tokindex[i]
+#                     print(doc_id)
+#                     print(documents[doc_id].id)
+#                     print(tokindex)
+#                     print( ( feature_names[z], y,x, f_td, doc_nbterms, nb_docs, df, idf))
+#                     top_k_list[documents[doc_id].id].append((feature_names[z],x,y,f_td,doc_nbterms,nb_docs,df,idf) )
+#             doc_id += 1
+#
+#
+#
+#         for doc in documents:
+#             for (x,y,z,f_td,doc_nbterms,nb_docs,df,idf) in top_k_list[doc.id]:
+#                 f.write(str(doc.id) + ","  + x + "," + str(f_td) + "," + str(doc_nbterms) + "," + str(nb_docs) + "," + str(df) + "," + str(idf) + "," + str(round(z,5)) + "\n")
+#
+#
+#
+#         f.write('\n')
+#         print("writing over")
+#         f.close()
+def extract_tfidf_kcs_sm( documents, ngram=(1,1), OUTPUT_FOL='TFIDFQtext'):
     '''
     Return the top K 1-gram terms according to TF-IDF
     Load corpus and convert to Dictionary and Corpus of gensim
@@ -745,95 +960,95 @@ def extract_high_tfidf_words_sm( documents, ngram=(1,1), OUTPUT_FOL='TFIDFQtext'
     :return:
     '''
 
-    if not os.path.exists(OUTPUT_DIR + OUTPUT_FOL):
-        os.makedirs(OUTPUT_DIR + OUTPUT_FOL)
 
-    texts = [' '.join(preprocessText(document.text,stemming=IS_STEM,stopwords_removal=REMOVE_STOPWORDS))  for document in documents]
+    texts = [' '.join(preprocessText(document.text,stemming=True,stopwords_removal=True)).replace("nan"," ")  for document in documents]
 
     #### Create Scikitlearn corpus
     top_k_list = {}
 
-    tf = TfidfVectorizer(analyzer='word', ngram_range=ngram,stop_words=stopwords,min_df=2,max_df=1000)
+    tf = TfidfVectorizer(analyzer='word', ngram_range=ngram,min_df=1)
     tfidf_matrix = tf.fit_transform(texts)
     feature_names = tf.get_feature_names()
 
+    ctf_model = CountVectorizer(analyzer='word', ngram_range=ngram,  min_df=1)
+    ctfidf_matrix = ctf_model.fit_transform(texts)
+    ctfidf_matrixdense = ctfidf_matrix.todense()
+    cfeature_names = ctf_model.get_feature_names()
+
+    # doc_id=0
+
+    # for doc in tfidf_matrix.todense():
+    #     temptokens = zip(doc.tolist()[0], itertools.count())
+    #     temptokens1=[]
+    #     for (x, y) in temptokens:
+    #         stemy = feature_names[y]
+    #         if x > 0.0:
+    #             temptokens1.append((x,y))
+    #
+    #     tokindex = heapq.nlargest(len(temptokens1), temptokens1)
+    #
+    #     top_k_list[documents[doc_id].id] = []
+    #     for (x, y) in tokindex:
+    #         top_k_list[documents[doc_id].id].append((feature_names[y],x) )
+    #     doc_id += 1
+    othercolums = documents[0].otherfields.keys()
+    columns = ["id","term","tf","doc_nbterms","nb_docs","df","idf","tfidf"] + list(othercolums)
+
+
+    file_csv = open(OUTPUT_DIR+OUTPUT_FOL+".csv", 'w')
+    csvwriter = csv.writer(file_csv, delimiter=',')
+    csvwriter.writerow(columns)
+    nb_docs =len(documents)
     doc_id=0
 
+
     for doc in tfidf_matrix.todense():
+        print(doc_id)
         temptokens = zip(doc.tolist()[0], itertools.count())
+        cmat = ctfidf_matrixdense[doc_id].tolist()[0]
+        doc_nbterms = sum(cmat)
         temptokens1=[]
         for (x, y) in temptokens:
-            stemy = feature_names[y]
-            if x > 0.0:
-                temptokens1.append((x,y))
+            if x > 0:
+                cindex = cfeature_names.index(feature_names[y])
+                f_td = cmat[cindex]
+                df = len(ctfidf_matrix[:, cindex].data)
+                idf = round(np.log(nb_docs / df), 8)
+                z=x
+                temptokens1.append((z, x, y,f_td,doc_nbterms,nb_docs,df,idf))
 
         tokindex = heapq.nlargest(len(temptokens1), temptokens1)
+        # print(tokindex)
 
         top_k_list[documents[doc_id].id] = []
-        for (x, y) in tokindex:
-            top_k_list[documents[doc_id].id].append((feature_names[y],x) )
+        for (x, y,z,f_td,doc_nbterms,nb_docs,df,idf) in tokindex:
+            feature_dict = {}
+            feature_dict = {"term":feature_names[z],"tf":x,"tf":f_td,"doc_nbterms":doc_nbterms,"nb_docs":nb_docs,"df":df,"idf":idf,"tfidf":y,"id":documents[doc_id].id}
+            for column in columns:
+                if(column in documents[doc_id].otherfields.keys()):
+                    feature_dict[column] = documents[doc_id].otherfields[column]
+
+            top_k_list[documents[doc_id].id].append(feature_dict )
+            row_new = [feature_dict[column] for column in columns]
+            csvwriter.writerow(row_new)
+            # print(row_new)
+
+        # if len(top_k_list[documents[doc_id].id]) == 0:
+        #     for (x, y, z, f_td, doc_nbterms, nb_docs, df, idf) in tokindex:
+        #         top_k_list[documents[doc_id].id].append((feature_names[z], x, y, f_td, doc_nbterms, nb_docs, df, idf))
+        #
+        # if len(top_k_list[documents[doc_id].id]) < 2 and len(tokindex) > 0:
+        #     print("here",documents[doc_id].id)
+        #     for i in range(len(tokindex)):
+        #         ( x, y,z, f_td, doc_nbterms, nb_docs, df, idf) = tokindex[i]
+        #         print(doc_id)
+        #         print(documents[doc_id].id)
+        #         print(tokindex)
+        #         print( ( feature_names[z], y,x, f_td, doc_nbterms, nb_docs, df, idf))
+        #         top_k_list[documents[doc_id].id].append((feature_names[z],x,y,f_td,doc_nbterms,nb_docs,df,idf) )
         doc_id += 1
 
-    write_to_file=True
-    if write_to_file == True:
-        f = open(OUTPUT_DIR+OUTPUT_FOL+".csv", "w")
-        f.write("questionid,term,tf,doc_nbterms,nb_docs,df,idf,tfidf\n")
-
-        nb_docs =len(documents)
-        doc_id=0
-        ctf_model = CountVectorizer(analyzer='word', ngram_range=ngram, stop_words=stopwords, min_df=1)
-        ctfidf_matrix = ctf_model.fit_transform(texts)
-        ctfidf_matrixdense = ctfidf_matrix.todense()
-        cfeature_names = ctf_model.get_feature_names()
-
-        for doc in tfidf_matrix.todense():
-            print(doc_id)
-            temptokens = zip(doc.tolist()[0], itertools.count())
-            cmat = ctfidf_matrixdense[doc_id].tolist()[0]
-            doc_nbterms = sum(cmat)
-            temptokens1=[]
-            for (x, y) in temptokens:
-                if x > 0:
-                    cindex = cfeature_names.index(feature_names[y])
-                    f_td = cmat[cindex]
-                    df = len(ctfidf_matrix[:, cindex].data)
-                    idf = round(np.log(nb_docs / df), 8)
-                    z=x
-                    temptokens1.append((z, x, y,f_td,doc_nbterms,nb_docs,df,idf))
-
-            tokindex = heapq.nlargest(len(temptokens1), temptokens1)
-            # print(tokindex)
-
-            top_k_list[documents[doc_id].id] = []
-            for (x, y,z,f_td,doc_nbterms,nb_docs,df,idf) in tokindex:
-                top_k_list[documents[doc_id].id].append((feature_names[z],x,y,f_td,doc_nbterms,nb_docs,df,idf) )
-
-            if len(top_k_list[documents[doc_id].id]) == 0:
-                for (x, y, z, f_td, doc_nbterms, nb_docs, df, idf) in tokindex:
-                    top_k_list[documents[doc_id].id].append((feature_names[z], x, y, f_td, doc_nbterms, nb_docs, df, idf))
-
-            if len(top_k_list[documents[doc_id].id]) < 2 and len(tokindex) > 0:
-                print("here",documents[doc_id].id)
-                for i in range(len(tokindex)):
-                    ( x, y,z, f_td, doc_nbterms, nb_docs, df, idf) = tokindex[i]
-                    print(doc_id)
-                    print(documents[doc_id].id)
-                    print(tokindex)
-                    print( ( feature_names[z], y,x, f_td, doc_nbterms, nb_docs, df, idf))
-                    top_k_list[documents[doc_id].id].append((feature_names[z],x,y,f_td,doc_nbterms,nb_docs,df,idf) )
-            doc_id += 1
-
-
-
-        for doc in documents:
-            for (x,y,z,f_td,doc_nbterms,nb_docs,df,idf) in top_k_list[doc.id]:
-                f.write(str(doc.id) + ","  + x + "," + str(f_td) + "," + str(doc_nbterms) + "," + str(nb_docs) + "," + str(df) + "," + str(idf) + "," + str(round(z,5)) + "\n")
-
-
-
-        f.write('\n')
-        print("writing over")
-        f.close()
+    print("writing over")
 
 if __name__=='__main__':
 
@@ -846,9 +1061,6 @@ if __name__=='__main__':
     llistbooks = ['iir-', 'mir-', 'foa-']
     documents = load_documenttsv(IR_CORPUS,llistbooks)
 
-    QS_CORPUS = 'data/readingcircleCorpus.csv'
-    listbooks = ['IR']
-    documents = load_document(QS_CORPUS,listbooks)
 
 
     # # Code For NP Chunks
@@ -932,4 +1144,30 @@ if __name__=='__main__':
     #
     # extract_unigrams(documents,  ngram=3, OUTPUT_FOL='13NGRAMS')
 
-    extract_high_tfidf_words_sm(documents,  ngram=(1, 1), OUTPUT_FOL='TFIDF1sm')
+    # QS_CORPUS = 'data/readingcircleCorpus.csv'
+    QS_CORPUS = 'data/QuizInfo - quiz2text.csv'
+    # PAGE_CORPUS = 'data/pagewise_corpus_ir.csv'
+    listbooks = ['']
+    # documents = load_document(PAGE_CORPUS,listbooks)
+    # documents = load_document_allfields(QS_CORPUS, listbooks,textfield=['question','choice_all'],idfield="que_id",otherfields=['quiz_id','quiz_session','quiz_order','que_order','Type'])
+    # extract_tfidf_kcs_sm(documents,  ngram=(1, 1), OUTPUT_FOL='TFIDF.all.quiz2text')
+
+    PAGE_CORPUS = 'data/pagewise_corpus_ir_sui.csv'
+    # documents = load_document_allfields(PAGE_CORPUS, booknames=['iir','sui'],textfield=['text'],idfield="page",otherfields=[])
+    # extract_tfidf_kcs_sm(documents, ngram=(1, 1), OUTPUT_FOL='TFIDF.all.page2text_ir_sui')
+
+
+    documents = load_document_allfields(PAGE_CORPUS, booknames=[], textfield=['text'], idfield="page",
+                                        otherfields=[])
+
+    quizdocuments = load_document_allfields(QS_CORPUS, booknames=[], textfield=['question','choice_all'], idfield="id",
+                                        otherfields=[])
+
+    # extract_lda(documents,documents,OUTPUT_FOL="LDA_17FALL",topics_n=200)
+    extract_lda(documents, quizdocuments, OUTPUT_FOL="LDA_17FALL", topics_n=200)
+
+    # extract_top_kcs_sm_from_vector(KC_FOLDER="LDA_17FALL",OUTPUT_FILE="LDA.irbook.pagewise.weight.csv",booknames=[''])
+
+    # READING_CIRCLE_PAGE_CORPUS = 'data/redingcircle_pagewise_corpus_ir.csv'
+    # documents = load_document_allfields(READING_CIRCLE_PAGE_CORPUS, listbooks, textfield=['text'], idfield="page", otherfields=[])
+    # extract_tfidf_kcs_sm(documents, ngram=(1, 1), OUTPUT_FOL='TFIDF.all.page2text.readingcircle.16SpringFall')
