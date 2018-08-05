@@ -1,12 +1,13 @@
 python 3
 
-## This project creates concepts with different formats
+## This project extracts concepts with different mechanisms
 
 TFIDF <br />
 TFIDFNP<br />
 LDA<br />
-greedy wiki<br />
-greedy acm<br />
+wikipedia titles as concepts<br />
+wikipedia sections as concepts<br />
+ACM publication Keywords as concepts<br />
 Global Ngrams<br />
 <br />
 
@@ -15,7 +16,6 @@ Global Ngrams<br />
 Concept2Vec<br />
 Doc2Vec<br />
 Word2Vec<br />
-
 
 ---
 
