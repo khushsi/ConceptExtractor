@@ -24,3 +24,9 @@ Word2Vec<br />
 -  You have to have a text file  with text in : IR_CORPUS = 'add the path to your file here'<br />
 - And uncomment the concept method you want to run<br />
 - The concepts will be generated in folder keyphrase_output
+
+
+## Failure of Marisa Trie ... point explicity to C path
+
+export MACOSX_DEPLOYMENT_TARGET=10.9
+export CPATH=/Library/Developer/CommandLineTools/usr/include/c++/v1

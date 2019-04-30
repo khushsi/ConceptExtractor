@@ -1,10 +1,12 @@
-marisa_trie==0.7.4
-nltk==3.2.5
+marisa_trie
+nltk
 spacy
 numpy
 gensim
 matplotlib
 scipy
-BeautifulSoup==3.2.1
-beautifulsoup4==4.6.0
-scikit_learn==0.19.1
+beautifulsoup4
+scikit_learn
+cython
+pandas
+pygtrie

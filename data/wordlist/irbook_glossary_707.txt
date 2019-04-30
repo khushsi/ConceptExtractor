@@ -1,0 +1,707 @@
+1/0 loss
+11-point interpolated average precision
+20 Newsgroups
+chi-square feature selection
+k nearest neighbor classification
+k-gram index
+Gamma encoding
+L2 distance
+A/B test
+Access control lists
+accumulator
+accuracy
+active learning
+ad hoc retrieval
+Add-one smoothing
+adjacency table
+adversarial information retrieval
+Akaike Information Criterion
+algorithmic search
+anchor text
+any-of classification
+authority score
+Auxiliary index
+average-link clustering
+B-tree
+bag of words
+bag-of-words
+balanced F&nbsp;measure
+Bayes error rate
+Bayes Optimal Decision Rule
+Bayes risk
+Bayes' Rule
+Bayesian networks
+Bayesian prior
+Bernoulli model
+best-merge persistence
+bias
+bias-variance tradeoff
+biclustering
+bigram language model
+Binary Independence Model
+binary tree
+biword index
+blind relevance feedback
+blocked sort-based indexing algorithm
+Blocked sort-based indexing algorithm (BSBI)
+blocked storage
+Blocked storage described
+blog
+BM25 weights
+boosting
+bottom-up clustering
+bowtie
+Break-even
+break-even point
+BSBI
+Buckshot algorithm
+Buffer
+caching
+compression and
+defined
+capture-recapture method
+cardinality
+in clustering
+CAS topics
+case-folding
+Category
+centroid
+in relevance feedback
+centroid-based classification
+chain rule
+chaining
+in clustering
+champion lists
+class boundary
+Classes, defined
+Classes, maximum a posteriori
+classification
+Classification function
+Classification, defined
+classifier
+Classifiers, defined
+Classifiers, two-class
+CLEF
+click spam
+clickstream mining
+clickthrough log analysis
+clique
+cluster
+in relevance feedback
+cluster hypothesis
+cluster-based classification
+cluster-internal labeling
+Clusters
+defined
+CO topics
+co-clustering
+collection
+collection frequency
+Collections
+statistics, large
+combination similarity
+complete-link clustering
+complete-linkage clustering
+component coverage
+compound-splitter
+compounds
+Compression
+lossless / lossy
+of dictionaries
+of postings list
+parameterized
+Compression / indexes
+Heaps' law
+Zipf's law
+Concept drift
+conditional independence assumption
+confusion matrix
+connected component
+connectivity queries
+connectivity server
+content management system
+Content management systems
+context
+XML
+context resemblance
+contiguity hypothesis
+continuation bit
+corpus
+cosine similarity
+CPC
+CPM
+Cranfield
+cross-entropy
+cross-language information retrieval
+cumulative gain
+data-centric XML
+database
+relational
+Databases
+communication with
+decision boundary
+decision hyperplane
+Decision trees
+dendrogram
+development set
+Development sets
+development test collection
+Dice coefficient
+dictionary
+differential cluster labeling
+digital libraries
+Disk seek
+distortion
+distributed index
+Distributed indexing
+distributed information retrieval
+divisive clustering
+DNS resolution
+DNS server
+docID
+document
+document collection
+document frequency
+document likelihood model
+document partitioning
+Document space
+document vector
+document-at-a-time
+document-partitioned index
+dot product
+Dynamic indexing
+East Asian languages
+edit distance
+effectiveness
+Effectiveness, text classification
+Efficiency
+eigen decomposition
+eigenvalue
+EM algorithm
+email sorting
+Email, sorting
+enterprise resource planning
+Enterprise search
+Entropy
+equivalence classes
+Ergodic Markov Chain
+Euclidean distance
+Euclidean length
+Evalution of retrieval systems, text classification
+evidence accumulation
+exclusive clustering
+exhaustive clustering
+expectation step
+Expectation-Maximization algorithm
+expected edge density
+extended query
+Extensible Markup Language
+external criterion of quality
+External sorting algorithm
+false negative
+false positive
+feature engineering
+feature selection
+Feature selection / text classification, greedy
+Feature selection / text classification, method comparison
+Feature selection / text classification, multiple classifiers
+Feature selection / text classification, mutual information
+Feature selection / text classification, noise feature
+Feature selection / text classification, overfitting
+Feature selection / text classification, overview
+Feature selection / text classification, statistical significance
+Feature selection/text classification, frequency-based
+Feature selection/text classification, method comparison
+Feature selection/text classification, mutual information
+Feature selection/text classification, overview
+field
+filtering
+first story detection
+flat clustering
+focused retrieval
+free text
+free text query
+frequency-based feature selection
+Frobenius norm
+Front coding
+functional margin
+F&nbsp;measure
+as an evaluation measure in clustering
+GAAC
+generative model
+geometric margin
+gold standard
+Golomb codes
+GOV2
+greedy feature selection
+grep
+ground truth
+group-average agglomerative clustering
+group-average clustering
+HAC
+hard assignment
+hard clustering
+harmonic number
+Harmonic numbers
+Hashing
+Heaps' law
+held-out
+Held-out data
+hierarchic clustering
+hierarchical agglomerative clustering
+hierarchical classification
+hierarchical clustering
+Hierarchical Dirichlet Processes
+hierarchy
+in clustering
+highlighting
+HITS
+HTML
+http
+hub score
+hyphens
+i.i.d.
+Ide dec-hi
+idf
+iid
+impact
+implicit relevance feedback
+in-links
+incidence matrix
+Independence
+independent and identically distributed
+in clustering
+Independent and identically distributed ( IID )
+index
+index construction
+resources
+Indexer
+indexing
+defined
+sort-based
+indexing granularity
+indexing unit
+INEX
+Information gain
+information need
+information retrieval
+hardware issues
+terms , statistical properties of
+informational queries
+inner product
+instance-based learning
+internal criterion of quality
+interpolated precision
+intersection
+postings list
+inverse document frequency
+inversion
+Inversions
+defined
+inverted file
+inverted index
+inverted list
+Inverter
+IP address
+Jaccard coefficient
+k nearest neighbor classification (kNN), multinomial Naive Bayes <I>vs.</I>, 249.57 k nearest neighbor classification (kNN), as nonlinear classification
+K-medoids
+kappa statistic
+kernel
+kernel function
+kernel trick
+key-value pairs
+keyword-in-context
+kNN classification
+Kruskal's algorithm
+Kullback-Leibler divergence
+KWIC
+label
+labeling
+Labeling, defined
+language
+language identification
+language model
+Laplace smoothing
+Latent Dirichlet Allocation
+latent semantic indexing
+LDA
+learning algorithm
+learning error
+learning method
+lemma
+lemmatization
+lemmatizer
+length-normalization
+Levenshtein distance
+lexicalized subtree
+lexicon
+likelihood
+likelihood ratio
+linear classifier
+linear problem
+linear separability
+link farms
+link spam
+LLRUN
+LM
+Logarithmic merging
+lossless
+lossy compression
+low-rank approximation
+LSA
+LSI as soft clustering
+machine translation
+machine-learned relevance
+Macroaveraging
+MAP
+Map phase
+MapReduce
+margin
+marginal relevance
+marginal statistic
+Master node
+matrix decomposition
+maximization step
+maximum a posteriori
+maximum a posteriori class
+maximum likelihood estimate
+Maximum likelihood estimate ( MLE )
+Maximum likelihood estimate (MLE)
+maximum likelihood estimation
+Mean Average Precision
+medoid
+memory capacity
+memory-based learning
+Mercator
+Mercer kernel
+merge
+postings
+merge algorithm
+metadata
+microaveraging
+minimum spanning tree
+minimum variance clustering
+MLE
+ModApte split
+model complexity
+model-based clustering
+monotonicity
+multiclass classification
+multiclass SVM
+multilabel classification
+multimodal class
+Multinomial  Naive  Bayes, random  variable X / U
+multinomial classification
+multinomial distribution
+Multinomial model
+multinomial Naive Bayes
+Multinomial Naive Bayes, in  text classification
+Multinomial Naive Bayes, in text classification
+Multinomial Naive Bayes, optimal  classifier
+Multinomial Naive Bayes, positional independence assumption
+Multinomial Naive Bayes, sparseness
+multinomial NB
+multivalue classification
+multivariate Bernoulli model
+mutual information
+Naive Bayes assumption
+named entity tagging
+National  Institute of Standards and Technology
+natural language processing
+navigational queries
+NDCG
+nested elements
+NEXI
+next word index
+Nibble
+NLP
+NMI
+noise document
+noise feature
+nonlinear classifier
+nonlinear problem
+normal vector
+normalized discounted cumulative gain
+normalized mutual information
+novelty detection
+NTCIR
+objective function
+odds
+odds ratio
+Okapi weighting
+one-of classification
+optimal classifier
+optimal clustering
+optimal learning method
+ordinal regression
+out-links
+outlier
+overfitting
+Oxford English Dictionary
+PageRank
+paid inclusion
+parameter tuning
+parameter tying
+parameter-free compression
+parameterized compression
+parametric index
+parametric search
+Parser
+partition rule
+partitional clustering
+passage retrieval
+patent databases
+perceptron algorithm
+performance
+permuterm index
+personalized PageRank
+phrase index
+phrase queries
+phrase search
+pivoted document length normalization
+Pointwise mutual information
+polychotomous
+polytomous classification
+polytope
+pooling
+pornography filtering
+Porter stemmer
+positional independence
+positional index
+posterior probability
+posting
+Postings
+compression and
+in block sort-based indexing
+postings list
+power law
+precision
+precision-recall curve
+prefix-free code
+Preprocessing, effects of
+principal direction divisive partitioning
+principal left eigenvector
+prior probability
+Probability Ranking Principle
+probability vector
+prototype
+proximity operator
+proximity weighting
+pseudo relevance feedback
+pseudocounts
+pull model
+purity
+push model
+Quadratic Programming
+query
+free text
+simple conjunctive
+query expansion
+query likelihood model
+query optimization
+query-by-example
+R-precision
+Rand index
+adjusted
+random variable
+Random variables, C
+rank
+Ranked Boolean retrieval
+ranked retrieval
+model
+Ranked retrieval models
+described
+ranking SVM
+recall
+Reduce phase
+reduced SVD
+regression
+regular expressions
+regularization
+relational database
+relative frequency
+relevance
+relevance feedback
+residual sum of squares
+results snippets
+retrieval model
+Boolean
+Retrieval Status Value
+retrieval systems
+Reuters-21578
+Reuters-21578 collection, text classification in
+Reuters-RCV1
+Reuters-RCV1 collection
+described
+dictionary-as-a-string storage
+RF
+Robots Exclusion Protocol
+ROC curve
+Rocchio algorithm
+Rocchio classification
+Routing
+RSS
+rule of 30
+Rules in text classification
+Scatter-Gather
+schema
+schema diversity
+schema heterogeneity
+search advertising
+search engine marketing
+Search Engine Optimizers
+search result clustering
+search results
+security
+seed
+seek time
+Segment file
+semi-supervised learning
+semistructured query
+semistructured retrieval
+sensitivity
+sentiment detection
+Sequence model
+shingling
+single-label classification
+single-link clustering
+single-linkage clustering
+single-pass in-memory indexing
+Single-pass in-memory indexing (SPIMI)
+singleton
+singleton cluster
+singular value decomposition
+skip list
+slack variables
+SMART
+smoothing
+Bayesian prior
+linear interpolation
+snippet
+soft assignment
+soft clustering
+Sort-based multiway merge
+sorting
+in index construction
+soundex
+spam
+email
+web
+sparseness
+specificity
+spectral clustering
+speech recognition
+spelling correction
+spider
+spider traps
+SPIMI
+splits
+sponsored search
+Standing query
+static quality scores
+static web pages
+statistical significance
+Statistical text classification
+steady-state
+stemming
+stochastic matrix
+stop list
+stop words
+stop words
+structural SVM
+structural SVMs
+structural term
+structured document retrieval principle
+structured query
+structured retrieval
+summarization
+summary
+dynamic
+static
+Supervised learning
+support vector
+support vector machine
+multiclass
+Support vector machines ( SVMs ) , effectiveness
+SVD
+SVM
+symmetric diagonal decomposition
+synonymy
+teleport
+term
+term frequency
+term normalization
+term partitioning
+term-at-a-time
+term-document matrix
+term-partitioned index
+termID
+Test data
+test set
+text categorization
+text classification
+Text classification, defined
+Text classification, feature selection
+Text classification, overview
+Text classification, vertical search engines
+text summarization
+text-centric XML
+tf
+tf-idf
+tiered indexes
+token
+token normalization
+top docs
+top-down clustering
+topic
+in XML retrieval
+topic classification
+topic spotting
+topic-specific PageRank
+topical relevance
+training set
+transactional query
+transductive SVMs
+translation model
+TREC
+trec_eval
+truecasing
+truncated SVD
+two-class classifier
+type
+unary code
+unigram language model
+union-find algorithm
+universal code
+unsupervised learning
+URL
+URL normalization
+Utility measure
+Variable byte encoding
+variance
+vector space model
+vertical search engine
+vocabulary
+Voronoi tessellation
+Ward's method
+web crawler
+weight vector
+weighted zone scoring
+Wikipedia
+wildcard query
+within-point scatter
+word segmentation
+XML
+XML attribute
+XML DOM
+XML DTD
+XML element
+XML fragment
+XML Schema
+XML tag
+XPath
+Zipf's law
+zone
+zone index
+zone search
