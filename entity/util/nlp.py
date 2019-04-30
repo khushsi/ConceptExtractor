@@ -4,7 +4,9 @@ import spacy
 from entity.util.config import config
 
 
-nlp = spacy.load('en')
+# nlp = spacy.load('en')
+nlp = spacy.load('en_core_web_sm')
+
 stemmer = PorterStemmer()
 
 STOPWORD_PATH = 'data/stopword/stopword_en.txt'
