@@ -10,12 +10,11 @@ from entity.util.extractors import extract_top_kcs_sm,extract_top_kcs
 
 if __name__=='__main__':
 
-
-    BOOK_CORPUS = 'data/sampleSyllabus.csv'
+    BOOK_CORPUS = 'data/trialSyllabus/sampleSyllabus.csv'
     listbooks = []
 
-    concept = config.LIST_FILTER
-    keyword_list_path = config.irbook_glossary_list
+    concept = config.LIST_FILTER #WHICH FILTER
+    keyword_list_path = config.acm_list #WHICH KEYWORD LIST TO FILTER
 
 
     bookdocs_16 = dc.load_document(BOOK_CORPUS,
@@ -31,9 +30,7 @@ if __name__=='__main__':
     model_dir = "model/"
     concept_dir = "concepts/"
     Define_kc = False
-    no_of_topics = 10
-
-
+    no_of_topics = -1 #TOP K
 
     if concept == config.TFIDFNP:
 
@@ -110,7 +107,7 @@ if __name__=='__main__':
 
     if concept == config.LIST_FILTER:
         ingram = (1,5)
-        name = "irbook_tfidf_keyword"
+        name = "wikiacm" #hardcoded filename for triecache
         ptfidf =  model_dir +"m_"+ concept+"ngram"+str(ingram[0])+"_"+str(ingram[1])+".pickle"
         outdir =concept_dir + config.dir_sep + concept+"_"+name
 

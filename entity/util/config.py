@@ -24,5 +24,5 @@ class config:
     # LIST
     wiki_list = 'data/wordlist/wikipedia_14778209.txt'
     irbook_glossary_list = 'data/wordlist/irbook_glossary_707.txt'
-
     Remove_Prev_models = True
+    acm_list = 'data/wordlist/acm_keywords_168940.txt'
