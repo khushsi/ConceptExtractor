@@ -31,7 +31,7 @@ class KeywordList:
             dict_files = [self.wordlist]
             for dict_file in dict_files:
                 print(dict_file)
-                file = open(dict_file, 'r')
+                file = open(dict_file, 'r',encoding='utf8')
                 for line in file:
                     tokens = nlp.preprocessText(line)
                     if(len(tokens)>0):
