@@ -15,10 +15,10 @@ class config:
 
     # Concepts
     TFIDF = 'tfidf'
-    TFIDFNP = 'tfidfnp'
-    NGRAMS = 'ngrams'
-    LIST_FILTER = 'list_filter'
-    WIKI_FILTER = 'wiki_filter_np'
+    TFIDFNP = 'tfidfnp'#noun phrases that are ranked by tfidf
+    NGRAMS = 'ngrams' #all ngrams
+    LIST_FILTER = 'list_filter' #TFIDF ngrams + filter (need to specify which filter)
+    WIKI_FILTER = 'wiki_filter_np' #unused (but should have been TFIDF noun phrase + filter) also need to create
 
 
     # LIST
