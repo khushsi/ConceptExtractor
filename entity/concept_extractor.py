@@ -5,7 +5,7 @@ from entity.util.config import config
 from entity.util import document as dc
 from entity.util import common as cm
 from entity.models import tfidf,keyword
-from entity.util.extractors import extract_top_kcs_sm,extract_top_kcs
+from entity.util.extractors import extract_top_kcs
 
 
 if __name__=='__main__':
@@ -14,7 +14,7 @@ if __name__=='__main__':
     listbooks = []
 
     concept = config.LIST_FILTER #WHICH FILTER
-    keyword_list_path = config.acm_list #WHICH KEYWORD LIST TO FILTER
+    keyword_list_path = config.wiki_list #WHICH KEYWORD LIST TO FILTER
 
 
     bookdocs_16 = dc.load_document(BOOK_CORPUS,
@@ -107,7 +107,7 @@ if __name__=='__main__':
 
     if concept == config.LIST_FILTER:
         ingram = (1,5)
-        name = "wikiacm" #hardcoded filename for triecache
+        name = (keyword_list_path.split('/')[-1]).split('.')[0] #hardcoded filename for triecache
         ptfidf =  model_dir +"m_"+ concept+"ngram"+str(ingram[0])+"_"+str(ingram[1])+".pickle"
         outdir =concept_dir + config.dir_sep + concept+"_"+name
 
@@ -128,7 +128,7 @@ if __name__=='__main__':
         model = cm.load_model(ptfidf)
         keyword_list = keyword.KeywordList(name,keyword_list_path)
         doc2concepts_ngram = model.get_Topics(extract_docs)
-        doc2concepts = keyword_list.get_Topics_secondFilter(doc2concepts_ngram)
+        doc2concepts = keyword_list.get_Topics_secondFilter(doc2concepts_ngram) #FILTER
 
 
         df = extract_top_kcs(doc2concepts=doc2concepts,output_dir=outdir,define_kc=False,topk=no_of_topics)
