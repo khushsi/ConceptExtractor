@@ -16,7 +16,7 @@ class TFIDFExtractor():
         pdocuments = nlp.preprocessed_docs(documents)
         self.raw_documents = documents
         self.docs = [ ' '.join(doc.tokens) for doc in pdocuments]
-        self.maxdf = len(documents) * 0.90
+        self.maxdf = max(len(documents) * 0.90,mindf)
         self.mindf = mindf
         self.ngram = ngram
         self.model = None
