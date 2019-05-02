@@ -10,7 +10,7 @@ class config:
 
     #
     dir_sep = "/"
-    file_ext ="txt"
+    file_ext =".txt"
     # Models
 
     # Concepts
@@ -24,3 +24,5 @@ class config:
     # LIST
     wiki_list = 'data/wordlist/wikipedia_14778209.txt'
     irbook_glossary_list = 'data/wordlist/irbook_glossary_707.txt'
+
+    Remove_Prev_models = True

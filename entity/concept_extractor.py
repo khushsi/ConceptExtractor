@@ -5,13 +5,13 @@ from entity.util.config import config
 from entity.util import document as dc
 from entity.util import common as cm
 from entity.models import tfidf,keyword
-from entity.util.extractors import extract_top_kcs
+from entity.util.extractors import extract_top_kcs_sm,extract_top_kcs
 
 
 if __name__=='__main__':
 
 
-    BOOK_CORPUS = 'data/sample_file.csv'
+    BOOK_CORPUS = 'data/sampleSyllabus.csv'
     listbooks = []
 
     concept = config.LIST_FILTER
@@ -31,7 +31,7 @@ if __name__=='__main__':
     model_dir = "model/"
     concept_dir = "concepts/"
     Define_kc = False
-    no_of_topics = -1
+    no_of_topics = 10
 
 
 
@@ -47,7 +47,7 @@ if __name__=='__main__':
 
         model = None
 
-        if not os.path.exists(ptfidf):
+        if not os.path.exists(ptfidf) or config.Remove_Prev_models:
             model = tfidf.TFIDFExtractor(train_docs,ngram=(1,5),mindf=1)
             model.train()
             model.save_model(ptfidf)
@@ -72,7 +72,7 @@ if __name__=='__main__':
 
         model = None
 
-        if not os.path.exists(ptfidf):
+        if not os.path.exists(ptfidf)  or config.Remove_Prev_models:
             model = tfidf.TFIDFExtractor(train_docs,ngram=(1,5),mindf=1)
             model.train()
             model.save_model(ptfidf)
@@ -97,7 +97,7 @@ if __name__=='__main__':
 
         model = None
 
-        if not os.path.exists(ptfidf):
+        if not os.path.exists(ptfidf)  or config.Remove_Prev_models:
             model = tfidf.TFIDFExtractor(train_docs,ngram=(1,5),mindf=1)
             model.train()
             model.save_model(ptfidf)
@@ -121,7 +121,7 @@ if __name__=='__main__':
 
         model = None
 
-        if not os.path.exists(ptfidf):
+        if not os.path.exists(ptfidf)  or config.Remove_Prev_models:
             model = tfidf.TFIDFExtractor(train_docs,ngram=ingram)
             model.train()
             model.save_model(ptfidf)
@@ -135,3 +135,5 @@ if __name__=='__main__':
 
 
         df = extract_top_kcs(doc2concepts=doc2concepts,output_dir=outdir,define_kc=False,topk=no_of_topics)
+        # df = extract_top_kcs_sm(doc2concepts=doc2concepts,define_kc=False,topk=no_of_topics)
+        # df.to_csv(outdir,index=None)
