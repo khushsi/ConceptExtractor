@@ -10,11 +10,11 @@ from entity.util.extractors import extract_top_kcs
 
 if __name__=='__main__':
 
-    BOOK_CORPUS = 'data/trialSyllabus/sampleSyllabus.csv'
+    BOOK_CORPUS = 'data/trialSyllabus/singleSyllabusCSV.csv'
     listbooks = []
 
     concept = config.LIST_FILTER #WHICH FILTER
-    keyword_list_path = config.wiki_list #WHICH KEYWORD LIST TO FILTER
+    keyword_list_path = config.irbook_glossary_list #WHICH KEYWORD LIST TO FILTER
 
 
     bookdocs_16 = dc.load_document(BOOK_CORPUS,
