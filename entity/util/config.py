@@ -26,3 +26,13 @@ class config:
     irbook_glossary_list = 'data/wordlist/irbook_glossary_707.txt'
     Remove_Prev_models = True
     acm_list = 'data/wordlist/acm_keywords_168940.txt'
+
+    # STEMMERS
+    PORTER = 'PORTER'
+    LANCASTER = 'LANCASTER'
+    SNOWBALL = 'SNOWBALL'
+    LEMMATIZER_WORDNET = 'LEMMATIZER_WORDNET' #NOTE: NEED TO DOWNLOAD WORDNET FROM NLTK
+
+    #DOWNLOADING WORDNET:
+    #python -c "import nltk; nltk.download('wordnet')"
+

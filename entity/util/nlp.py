@@ -1,5 +1,8 @@
 import re
 from nltk.stem.porter import PorterStemmer
+from nltk.stem.lancaster import LancasterStemmer
+from nltk.stem.snowball import EnglishStemmer
+from nltk.stem import WordNetLemmatizer
 import spacy
 from entity.util.config import config
 
@@ -7,7 +10,8 @@ from entity.util.config import config
 # nlp = spacy.load('en')
 nlp = spacy.load('en_core_web_sm')
 
-stemmer = PorterStemmer()
+STEMMER_TYPE = config.LEMMATIZER_WORDNET
+STEMMER_TYPE_DICT = {config.PORTER:PorterStemmer() , config.LANCASTER:LancasterStemmer() , config.SNOWBALL:EnglishStemmer() , config.LEMMATIZER_WORDNET:WordNetLemmatizer()}
 
 STOPWORD_PATH = 'data/stopword/stopword_en.txt'
 
@@ -23,8 +27,12 @@ def load_stopwords(sfile = config.STOPWORD_PATH):
 
 def stem(text):
     word_list = text.split(" ")
+    stemmer = STEMMER_TYPE_DICT[STEMMER_TYPE]
     for i in range(len(word_list)):
-        word_list[i] = stemmer.stem(word_list[i])
+        if STEMMER_TYPE == config.LEMMATIZER_WORDNET:
+            word_list[i] = stemmer.lemmatize(word_list[i])
+        else:
+            word_list[i] = stemmer.stem(word_list[i])
     return ' '.join(word_list)
 
 
