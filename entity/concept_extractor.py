@@ -10,7 +10,7 @@ from entity.util.extractors import extract_top_kcs
 
 if __name__=='__main__':
 
-    BOOK_CORPUS = 'data/trialSyllabus/syllabusCSV.csv'
+    BOOK_CORPUS = 'data/trialSyllabus/scheduleCSV.csv'
     listbooks = []
 
     concept = config.LIST_FILTER #WHICH FILTER
@@ -28,7 +28,7 @@ if __name__=='__main__':
     train_docs = bookdocs_16
     extract_docs = bookdocs_16
     model_dir = "model/"
-    concept_dir = "concepts/EXPERT_LEMMATIZER_WORDNET/"
+    concept_dir = "concepts/schedule/EXPERT_PORTER/"
     Define_kc = False
     no_of_topics = -1 #TOP K
 
