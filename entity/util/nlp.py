@@ -10,7 +10,7 @@ from entity.util.config import config
 # nlp = spacy.load('en')
 nlp = spacy.load('en_core_web_sm')
 
-STEMMER_TYPE = config.LEMMATIZER_WORDNET
+STEMMER_TYPE = config.PORTER
 STEMMER_TYPE_DICT = {config.PORTER:PorterStemmer() , config.LANCASTER:LancasterStemmer() , config.SNOWBALL:EnglishStemmer() , config.LEMMATIZER_WORDNET:WordNetLemmatizer()}
 
 STOPWORD_PATH = 'data/stopword/stopword_en.txt'
