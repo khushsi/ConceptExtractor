@@ -14,7 +14,7 @@ if __name__=='__main__':
     listbooks = []
 
     concept = config.LIST_FILTER #WHICH FILTER
-    keyword_list_path = config.irbook_expert_list #WHICH KEYWORD LIST TO FILTER
+    keyword_list_path = config.expert_vote_list #WHICH KEYWORD LIST TO FILTER
 
 
     bookdocs_16 = dc.load_document(BOOK_CORPUS,
@@ -28,7 +28,7 @@ if __name__=='__main__':
     train_docs = bookdocs_16
     extract_docs = bookdocs_16
     model_dir = "model/"
-    concept_dir = "concepts/schedule/EXPERT_PORTER/"
+    concept_dir = "concepts/schedule/EXPERT_VOTE_SNOWBALL/"
     Define_kc = False
     no_of_topics = -1 #TOP K
 
