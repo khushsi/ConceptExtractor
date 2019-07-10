@@ -7,6 +7,7 @@ class config:
     REMOVE_STOPWORDS=True
     STOPWORD_PATH = 'data/stopword/stopword_en.txt'
     TRIE_CACHE_DIR = 'data/triecache/'
+    REFRESH_CACHE = False
 
     #
     dir_sep = "/"
@@ -38,3 +39,7 @@ class config:
     #DOWNLOADING WORDNET:
     #python -c "import nltk; nltk.download('wordnet')"
 
+    #Additional info:
+    #Set up spacy by running:
+    #python -m spacy download en
+    #python -c "import spacy; spacy.load('en_core_web_sm')"

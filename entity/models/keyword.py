@@ -3,7 +3,7 @@ import os, pickle
 from entity.util.trie import MyTrie
 from entity.util import nlp
 from collections import Counter
-import itertools
+#import itertools
 
 class KeywordList:
     def __init__(self, name,wordlist_path,):
@@ -19,7 +19,7 @@ class KeywordList:
         '''
         trie = None
 
-        if os.path.isfile(trie_cache_file):
+        if os.path.isfile(trie_cache_file) and not config.REFRESH_CACHE:
             print('Start loading trie from %s' % trie_cache_file)
             with open(trie_cache_file, 'rb') as f:
                 trie = pickle.load(f)

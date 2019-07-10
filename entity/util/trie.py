@@ -1,6 +1,6 @@
 from entity.util import nlp
 import nltk
-# import  marisa_trie as trie
+#import marisa_trie as trie
 import pygtrie as trie
 
 class MyTrie:
